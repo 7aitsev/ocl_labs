@@ -1,0 +1,13 @@
+# Ignore everything
+*
+
+!CMakeLists.txt
+!*.md
+!*/
+
+!.gitignore
+!toolchain.cmake
+!lab*/*.c
+!lab*/*.cl
+!lab*/*.patch
+!common/**
