@@ -1,0 +1,20 @@
+--- host.c.orig	2018-05-19 17:38:16.000000000 +0300
++++ host.c	2018-05-19 17:45:03.000000000 +0300
+@@ -198,9 +198,14 @@
+                 (CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE & cmd_q_props)
+                 ? "yes" : "no");
+ 
+-    /*
+-     * type here your OpenCL API call
+-     */
++    /* Solution for the option 3 */
++    size_t timer_resolution;
++    rv = clGetDeviceInfo(device, CL_DEVICE_PROFILING_TIMER_RESOLUTION,
++           sizeof(size_t), &timer_resolution, NULL);
++    if(CL_SUCCESS != rv)
++       print_cl_error("failed - ", rv, stderr);
++    else
++       printf("\t\tProfiling timer resolution: %zd\n", timer_resolution);
+ 
+     // get information on extensions
+     size_t ext_size;

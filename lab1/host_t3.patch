@@ -1,0 +1,133 @@
+--- host.c.orig	2018-05-18 03:31:18.000000000 +0300
++++ host.c	2018-05-19 17:15:36.000000000 +0300
+@@ -8,7 +8,8 @@
+ #include "../common/errorcodes.c"
+ #include "../common/utils.c"
+ 
+-#define KERNEL_FILE_NAME "lab1.aocx"
++#define KERNEL_FILE_NAME "lab1_t3.aocx"
++#define NUM_ELEMENTS 2
+ 
+ int
+ main(int argc, char** argv)
+@@ -35,9 +36,9 @@
+     }
+ 
+     /* 3. Allocate the host memory buffer(s) */
+-    cl_int in_data = 0xCAFE;
+-    cl_int out_data;
+-    size_t out_data_size = sizeof(out_data);
++    cl_int in_data[NUM_ELEMENTS] = {0xBEEF, 0xF00D};
++    cl_int out_data[NUM_ELEMENTS] = {0};
++    size_t data_size = NUM_ELEMENTS * sizeof(cl_int);
+ 
+     /* 4. Create a *host* command queue with profiling enabled */
+     cl_command_queue cmd_q = clCreateCommandQueue(context, device, 
+@@ -49,16 +50,32 @@
+     }
+ 
+     /* 5. Allocate the device memory buffer(s) */
+-    cl_mem buf =
+-        clCreateBuffer(context, CL_MEM_WRITE_ONLY, out_data_size, NULL, &rv);
++    cl_mem buf_out =
++        clCreateBuffer(context, CL_MEM_WRITE_ONLY, data_size, NULL, &rv);
+     if(CL_SUCCESS != rv)
+     {
+-        print_cl_error("Failed to create a buffer object:", rv, stderr);
++        print_cl_error("Failed to create a buffer object (out):", rv, stderr);
++        return rv;
++    }
++    cl_mem buf_in =
++        clCreateBuffer(context, CL_MEM_READ_ONLY, data_size, NULL, &rv);
++    if(CL_SUCCESS != rv)
++    {
++        print_cl_error("Failed to create a buffer object (in):", rv, stderr);
+         return rv;
+     }
+ 
+     /* 6. Write the data from the host buffers to the device buffers */
+-    // don't need this step for now
++    rv = clEnqueueWriteBuffer(cmd_q, buf_in, CL_FALSE, 0,
++            data_size, in_data, 0, NULL, NULL);
++    if(CL_SUCCESS != rv)
++    {
++        print_cl_error("Couldn\'t enqueue the command to write the data:",
++                rv, stderr);
++        return rv;
++    }
++
++    //Wait(cmd_q);
+ 
+     /* 7. Read the kernel binary code from a file (see common/utils.c) */
+     kernel_file_size = read_binary_kernel(kernel_file_name, &kernel_binary);
+@@ -91,8 +108,8 @@
+     }
+ 
+     /* 10. Setup the arguments to the kernel object */
+-    rv  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &buf);
+-    rv |= clSetKernelArg(kernel, 1, sizeof(cl_int), &in_data);
++    rv  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &buf_out);
++    rv |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &buf_in);
+     if(CL_SUCCESS != rv)
+     {
+         print_cl_error("Failed to set an argument:", rv, stderr);
+@@ -100,32 +117,24 @@
+     }
+ 
+     /* 11. Enqueue the kernel object foe execution */
+-    //cl_event kernel_event; /* task1 */
+-    rv = clEnqueueTask(cmd_q, kernel, 0, NULL, NULL);
+-    /*
+-    // the same using clEnqueueNDRangeKernel() call
+-    size_t global_work_size = 1;
+-    // local work size is the same as global since
+-    // there is only one *work group* (see CL_DEVICE_MAX_COMPUTE_UNITS),
+-    // so the 6th argument can be left unspecified (i.e. NULL)
++    size_t global_work_size = 2;
++    //
++    //Wait(cmd_q);
+     rv = clEnqueueNDRangeKernel(cmd_q, kernel, 1, NULL,
+             &global_work_size, NULL, 0, NULL, NULL);
+-    */
+     if(CL_SUCCESS != rv)
+     {
+-        print_cl_error("Couldn't enqueue a task:", rv, stderr);
++        print_cl_error("Couldn\'t enqueue a task:", rv, stderr);
+         return rv;
+     }
+ 
+     // synchronization point
+     if(CL_SUCCESS != (rv = clFinish(cmd_q)))
+         print_cl_error("Failed to enqueue a barrier command:", rv, stderr);
++    //Wait(cmd_q);
+ 
+-    // get kernel time using the OpenCL event profiling API
+-    /* task1 */
+-    
+     /* 12. Read out the buffer back from the device to the host */
+-    rv = clEnqueueReadBuffer(cmd_q, buf, CL_TRUE, 0, out_data_size, &out_data,
++    rv = clEnqueueReadBuffer(cmd_q, buf_out, CL_TRUE, 0, data_size, out_data,
+             0, NULL, NULL);
+     if(CL_SUCCESS != rv)
+     {
+@@ -133,15 +142,18 @@
+                 rv, stderr);
+         return rv;
+     }
++    //clFinish(cmd_q);
+ 
+-    printf("Read value: %X\n", out_data);
++    printf("Read value: %X\n", out_data[0]);
++    printf("Read value: %X\n", out_data[1]);
+ 
+     /* 13. Finalization */
+     clReleaseKernel(kernel);
+     clReleaseProgram(program);
+     clReleaseCommandQueue(cmd_q);
+     clReleaseContext(context);
+-    clReleaseMemObject(buf);
++    clReleaseMemObject(buf_in);
++    clReleaseMemObject(buf_out);
+     // free host buffers bellow if necessary
+ 
+     return 0;

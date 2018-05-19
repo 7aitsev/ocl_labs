@@ -1,0 +1,13 @@
+--- core.cl.orig	2018-05-19 22:22:11.000000000 +0300
++++ core.cl	2018-05-19 22:21:13.000000000 +0300
+@@ -1,5 +1,8 @@
++__attribute__((reqd_work_group_size(2, 1, 1)))
+ __kernel void
+-inout(__global int* out, int in)
++inout(__global __write_only int * restrict out,
++        __global __read_only int * restrict in)
+ {
+-    *out = in; // out[0] = in;
++    int i = get_global_id(0);
++    out[i] = in[i];
+ }

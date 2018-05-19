@@ -1,0 +1,25 @@
+--- host.c.orig	2018-05-19 17:38:16.000000000 +0300
++++ host.c	2018-05-19 17:39:46.000000000 +0300
+@@ -198,9 +198,19 @@
+                 (CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE & cmd_q_props)
+                 ? "yes" : "no");
+ 
+-    /*
+-     * type here your OpenCL API call
+-     */
++    /* Solution for the option 1 */
++    printf("\t\tImage support: ");
++    cl_bool is_image_supported;
++    rv = clGetDeviceInfo(device, CL_DEVICE_IMAGE_SUPPORT,
++           sizeof(cl_bool), &is_image_supported, NULL);
++    if(CL_SUCCESS != rv)
++    {
++       print_cl_error("failed - ", rv, stderr);
++    }
++    else
++    {
++       printf("%s\n", is_image_supported ? "yes" : "no");
++    }
+ 
+     // get information on extensions
+     size_t ext_size;
