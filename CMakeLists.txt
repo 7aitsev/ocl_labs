@@ -40,3 +40,7 @@ foreach(target ${LAB_DIRS})
     get_filename_component(target_name ${target} NAME)
     message("\t* ${target_name} - ${LAB_DESCRIPTION}")
 endforeach(target)
+
+# Remove all patch-files
+file(GLOB PATCH_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} lab?/*.patch)
+file(REMOVE ${PATCH_FILES})
