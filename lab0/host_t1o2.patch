@@ -8,17 +8,17 @@
 -     * type here your OpenCL API call
 -     */
 +    /* Solution for the option 2 */
-+    printf("\t\tIs device available: ");
-+    cl_bool is_device_available;
-+    rv = clGetDeviceInfo(device, CL_DEVICE_AVAILABLE,
-+           sizeof(cl_bool), &is_device_available, NULL);
++    printf("\t\tEndianness: ");
++    cl_bool endianness;
++    rv = clGetDeviceInfo(device, CL_DEVICE_ENDIAN_LITTLE,
++           sizeof(cl_bool), &endianness, NULL);
 +    if(CL_SUCCESS != rv)
 +    {
 +       print_cl_error("failed - ", rv, stderr);
 +    }
 +    else
 +    {
-+       printf("%s\n", is_device_available ? "yes" : "no");
++       printf("%s\n", endianness ? "little" : "big");
 +    }
  
      // get information on extensions
