@@ -43,4 +43,6 @@ endforeach(target)
 
 # Remove all patch-files
 file(GLOB PATCH_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} lab?/*.patch)
-file(REMOVE ${PATCH_FILES})
+if(NOT "${PATCH_FILES}" STREQUAL "")
+    file(REMOVE ${PATCH_FILES})
+endif()
