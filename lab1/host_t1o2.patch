@@ -1,9 +1,9 @@
 --- host.c.orig	2018-05-19 19:30:14.000000000 +0300
 +++ host.c	2018-05-19 19:36:02.000000000 +0300
-@@ -82,8 +82,8 @@
+@@ -85,8 +85,8 @@
      }
  
-     /* 11. Enqueue the kernel object foe execution */
+     /* 11. Enqueue the kernel object for execution */
 -    //cl_event kernel_event; /* task1 */
 -    rv = clEnqueueTask(cmd_q, kernel, 0, NULL, NULL);
 +    cl_event kernel_event; /* task1 */
@@ -11,7 +11,7 @@
      /*
      // the same as above using clEnqueueNDRangeKernel() call
      size_t global_work_size = 1;
-@@ -102,7 +102,15 @@
+@@ -104,7 +104,15 @@
          print_cl_error("Failed to set a synchronization point:", rv, stderr);
  
      // get kernel time using the OpenCL event profiling API

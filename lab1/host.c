@@ -58,11 +58,14 @@ main(int argc, char** argv)
     /* 6. Write the data from the host buffers to the device buffers */
     // don't need this step (except for task3)
 
-    /* 7-8. Read a kernel file and build a program (see common/utils.c) */
+    /* 7-8. Read the kernel file and build a program (see common/utils.c) */
     cl_program program;
     rv = build_program(&program, &context, &device, kernel_file_name);
     if(CL_SUCCESS != rv)
+    {
+        print_cl_error("Failed to build a program:", rv, stderr);
         return rv;
+    }
 
     /* 9. Create the kernel object */
     cl_kernel kernel = clCreateKernel(program, "inout", &rv);
@@ -81,15 +84,14 @@ main(int argc, char** argv)
         return rv;
     }
 
-    /* 11. Enqueue the kernel object foe execution */
+    /* 11. Enqueue the kernel object for execution */
     //cl_event kernel_event; /* task1 */
     rv = clEnqueueTask(cmd_q, kernel, 0, NULL, NULL);
     /*
     // the same as above using clEnqueueNDRangeKernel() call
     size_t global_work_size = 1;
-    size_t local_work_size = 1;
     rv = clEnqueueNDRangeKernel(cmd_q, kernel, 1, NULL,
-            &global_work_size, &local_work_size, 0, NULL, NULL);
+            &global_work_size, NULL, 0, NULL, NULL);
     */
     if(CL_SUCCESS != rv)
     {

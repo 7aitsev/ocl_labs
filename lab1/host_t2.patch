@@ -26,7 +26,7 @@
          clCreateBuffer(context, CL_MEM_WRITE_ONLY, data_size, NULL, &rv);
      if(CL_SUCCESS != rv)
      {
-@@ -72,56 +80,52 @@
+@@ -75,55 +83,52 @@
          return rv;
      }
  
@@ -40,15 +40,14 @@
 -        return rv;
 -    }
 -
--    /* 11. Enqueue the kernel object foe execution */
+-    /* 11. Enqueue the kernel object for execution */
 -    //cl_event kernel_event; /* task1 */
 -    rv = clEnqueueTask(cmd_q, kernel, 0, NULL, NULL);
 -    /*
 -    // the same as above using clEnqueueNDRangeKernel() call
 -    size_t global_work_size = 1;
--    size_t local_work_size = 1;
 -    rv = clEnqueueNDRangeKernel(cmd_q, kernel, 1, NULL,
--            &global_work_size, &local_work_size, 0, NULL, NULL);
+-            &global_work_size, NULL, 0, NULL, NULL);
 -    */
 -    if(CL_SUCCESS != rv)
 -    {
