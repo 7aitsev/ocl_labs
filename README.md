@@ -181,7 +181,7 @@ inout(__global int* out, int in)
 
 Ядра NDRange позволяют воспользоваться параллелизмом данных — когда весь набор входных значений разбивается на более мелкие части, обрабатываемые одновременно путем выполнения одинаковой операции над каждой частью *в отдельном потоке*. Такой поток называют рабочим элементом (work-item), выполняющийся независимо друг от друга, а вся задача целиком называется NDRange (N-dimensional range). Размерность NDRange может быть в диапазоне от 1 до 3. Т.е. можно представить NDRange как одномерный массив рабочих элементов, если *данные* удобно представить в таком виде (сложение векторов), или как двумерный (умножение матриц). У рабочих элементов есть порядковые номера (id), которые уникальны для всех элементов устройства. Получить такой идентификатор элемента можно с помощью get\_global\_id(N), где N - размерность (число от 0 до 2). Рабочие элементы могут объединяться в рабочую группу (work-group), что позволяет им производить синхронизацию между собой и делить локальную память, которая для каждой рабочей группы своя. В целом, рабочие группы дают возможность декомпозировать задачу. Идентификаторы рабочих элементов внутри рабочих групп можно выяснить с помощью get\_local\_id(N).
 
-![Идентификаторы рабочих элементов и групп](https://us.fixstars.com/images/openclbook/dtp_462724_USER_CONTENT_0_html_3bb3f126.jpg)
+![Идентификаторы рабочих элементов и групп](https://user-images.githubusercontent.com/10958284/53959978-f8a42300-40dc-11e9-8c3a-f1e42ebc7850.jpg)
 
 На изображении выше, взятом из [\[7\]](#src_7), приведена взаимосвязь между глобальными и локальными идентификаторами рабочих элементов, а также идентификаторами рабочих групп.
 
@@ -209,4 +209,4 @@ inout(__global int* out, int in)
 4. <a name="src_4"></a>[DE1-SoC OpenCL User Manual](http://www.terasic.com.tw/attachment/archive/836/DE1SOC_OpenCL_v02.pdf)
 5. <a name="src_5"></a>[OpenCL (1.2) high level overview](https://www.youtube.com/watch?v=8D6yhpiQVVI)
 6. <a name="src_6"></a>[OpenCL (1.2) C](https://www.youtube.com/watch?v=RKyhHonQMbw)
-7. <a name="src_7"></a>[The OpenCL Programming Book](https://us.fixstars.com/opencl/book/OpenCLProgrammingBook/calling-the-kernel/)
+7. <a name="src_7"></a>[The OpenCL Programming Book](https://us.fixstars.com/images/demo/openclbook/dtp_462724_USER_CONTENT_0_html_3bb3f126.jpg)
