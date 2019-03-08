@@ -1,4 +1,10 @@
-# Содержание
+# About
+
+The project is an essential part of my [bachelor's thesis](http://elib.spbstu.ru/dl/2/v18-5035.pdf/info) in computer science and enginierinng.
+
+---
+
+## Содержание
 
 * [Тезаурус](#Тезаурус1)
 * [Подготовка](#Подготовка)
